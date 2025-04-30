@@ -5,7 +5,7 @@ dist
 .idea
 .vscode
 *.pyc
-*.tgz
+# *.tgz
 coverage
 .env
 .nyc_output

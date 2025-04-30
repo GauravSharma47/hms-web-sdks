@@ -12,6 +12,8 @@ import {
   selectLocalPeerID,
   selectPeerCount,
   selectPermissions,
+  selectSessionStore,
+  useHMSActions,
   useHMSStore,
 } from '@100mslive/react-sdk';
 import {
@@ -42,7 +44,6 @@ import { useParticipants } from '../../common/hooks';
 // @ts-ignore: No implicit Any
 import { getFormattedCount } from '../../common/utils';
 import { SIDE_PANE_OPTIONS } from '../../common/constants';
-
 export const ParticipantList = ({
   offStageRoles = [],
   onActive,
@@ -54,8 +55,17 @@ export const ParticipantList = ({
   const { participants, isConnected, peerCount } = useParticipants(filter);
   const isLargeRoom = useHMSStore(selectIsLargeRoom);
   const peersOrderedByRoles: Record<string, HMSPeer[]> = {};
-
   const handRaisedPeers = useHMSStore(selectHandRaisedPeers);
+
+  const [breakoutRoomsState, setBreakoutRoomsState] = useState(
+    useHMSStore(selectSessionStore('breakout_rooms')) || false,
+  );
+
+  const hmsActions = useHMSActions();
+  const breakoutRooms = () => {
+    hmsActions.sessionStore.set('breakout_rooms', !breakoutRoomsState);
+    setBreakoutRoomsState(!breakoutRoomsState);
+  };
 
   participants.forEach(participant => {
     if (participant.roleName) {
@@ -101,6 +111,9 @@ export const ParticipantList = ({
         }}
       >
         {!filter?.search && participants.length === 0 ? null : <ParticipantSearch onSearch={onSearch} inSidePane />}
+        <Button onClick={breakoutRooms} css={{ marginBottom: '$4' }}>
+          {breakoutRoomsState ? 'End ' : ''} Breakout rooms
+        </Button>
         <VirtualizedParticipants
           peersOrderedByRoles={peersOrderedByRoles}
           handRaisedList={handRaisedPeers}
