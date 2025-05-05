@@ -1,9 +1,6 @@
 import { HMSPrebuilt, Diagnostics } from '@100mslive/roomkit-react';
 import { getRoomCodeFromUrl } from './utils';
-import { useRef } from 'react';
-import { useEffect } from 'react';
-import { useState } from 'react';
-import { selectSessionStore } from '@100mslive/hms-video-store';
+import { useRef, useState } from 'react';
 
 export default function App() {
   const roomCode = getRoomCodeFromUrl();
@@ -11,21 +8,26 @@ export default function App() {
   const prebuiltRef = useRef(null);
   const [breakoutState, setBreakoutState] = useState(false);
 
-  useEffect(() => {
-    if (prebuiltRef.current) {
-      prebuiltRef.current.hmsStore.subscribe(state => {
-        setBreakoutState(state);
-      }, selectSessionStore('breakout_rooms'));
-    }
-  }, []);
+  const onInvte = () => {
+    console.log('Invite function called');
+  };
 
-  useEffect(() => {
-    console.log('Breakout state changed:', breakoutState);
-  }, [breakoutState]);
+  const onBreakout = () => {
+    console.log('Breakout function called');
+    setBreakoutState(prev => !prev);
+  };
 
   if (isDiagnostics) {
     return <Diagnostics />;
   }
 
-  return <HMSPrebuilt roomCode={roomCode} ref={prebuiltRef} />;
+  return (
+    <HMSPrebuilt
+      roomCode={roomCode}
+      ref={prebuiltRef}
+      onInvite={onInvte}
+      onBreakout={onBreakout}
+      breakoutState={breakoutState}
+    />
+  );
 }

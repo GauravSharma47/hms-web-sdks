@@ -68,8 +68,11 @@ export type HMSPrebuiltProps = {
   screens?: Screens;
   authToken?: string;
   leaveOnUnload?: boolean;
+  breakoutState?: boolean;
   onLeave?: () => void;
   onJoin?: () => void;
+  onInvite?: () => void;
+  onBreakout?: () => void;
   /**
    * @remarks
    * Specify css selectors for the HTML element to be used as container for dialogs. Affects the positioning and focus of dialogs.
@@ -96,8 +99,11 @@ export const HMSPrebuilt = React.forwardRef<HMSPrebuiltRefType, HMSPrebuiltProps
       options: { userName = '', userId = '', endpoints } = {},
       screens,
       leaveOnUnload = true,
+      breakoutState = false,
       onLeave,
       onJoin,
+      onInvite,
+      onBreakout,
     },
     ref,
   ) => {
@@ -176,8 +182,11 @@ export const HMSPrebuilt = React.forwardRef<HMSPrebuiltRefType, HMSPrebuiltProps
           value={{
             roomCode,
             containerSelector,
+            breakoutState,
             onLeave,
             onJoin,
+            onInvite,
+            onBreakout,
             userName,
             userId,
             endpoints: {

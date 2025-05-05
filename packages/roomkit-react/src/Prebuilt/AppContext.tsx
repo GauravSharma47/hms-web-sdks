@@ -8,8 +8,11 @@ type HMSPrebuiltContextType = {
   userId?: string;
   containerSelector: string;
   endpoints?: Record<string, string | undefined>;
+  breakoutState: boolean;
   onLeave?: () => void;
   onJoin?: () => void;
+  onInvite?: () => void;
+  onBreakout?: () => void;
 };
 
 export const HMSPrebuiltContext = React.createContext<HMSPrebuiltContextType>({
@@ -20,6 +23,9 @@ export const HMSPrebuiltContext = React.createContext<HMSPrebuiltContextType>({
   endpoints: {},
   onLeave: undefined,
   onJoin: undefined,
+  onInvite: undefined,
+  onBreakout: undefined,
+  breakoutState: false,
 });
 
 HMSPrebuiltContext.displayName = 'HMSPrebuiltContext';

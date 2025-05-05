@@ -12,8 +12,6 @@ import {
   selectLocalPeerID,
   selectPeerCount,
   selectPermissions,
-  selectSessionStore,
-  useHMSActions,
   useHMSStore,
 } from '@100mslive/react-sdk';
 import {
@@ -29,6 +27,7 @@ import {
   VerticalMenuIcon,
 } from '@100mslive/react-icons';
 import { Accordion, Box, Button, config as cssConfig, Dropdown, Flex, Input, Text, textEllipsis } from '../../..';
+import { useHMSPrebuiltContext } from '../../AppContext';
 // @ts-ignore: No implicit Any
 import IconButton from '../../IconButton';
 import { ConnectionIndicator } from '../Connection/ConnectionIndicator';
@@ -44,6 +43,7 @@ import { useParticipants } from '../../common/hooks';
 // @ts-ignore: No implicit Any
 import { getFormattedCount } from '../../common/utils';
 import { SIDE_PANE_OPTIONS } from '../../common/constants';
+
 export const ParticipantList = ({
   offStageRoles = [],
   onActive,
@@ -57,14 +57,18 @@ export const ParticipantList = ({
   const peersOrderedByRoles: Record<string, HMSPeer[]> = {};
   const handRaisedPeers = useHMSStore(selectHandRaisedPeers);
 
-  const [breakoutRoomsState, setBreakoutRoomsState] = useState(
-    useHMSStore(selectSessionStore('breakout_rooms')) || false,
-  );
+  const { onInvite, onBreakout, breakoutState } = useHMSPrebuiltContext();
 
-  const hmsActions = useHMSActions();
   const breakoutRooms = () => {
-    hmsActions.sessionStore.set('breakout_rooms', !breakoutRoomsState);
-    setBreakoutRoomsState(!breakoutRoomsState);
+    if (onBreakout) {
+      onBreakout();
+    }
+  };
+
+  const addParticipantEmit = () => {
+    if (onInvite) {
+      onInvite();
+    }
   };
 
   participants.forEach(participant => {
@@ -111,9 +115,33 @@ export const ParticipantList = ({
         }}
       >
         {!filter?.search && participants.length === 0 ? null : <ParticipantSearch onSearch={onSearch} inSidePane />}
-        <Button onClick={breakoutRooms} css={{ marginBottom: '$4' }}>
-          {breakoutRoomsState ? 'End ' : ''} Breakout rooms
-        </Button>
+        <Flex
+          direction="row"
+          css={{
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: '$4',
+          }}
+        >
+          <Button
+            onClick={addParticipantEmit}
+            variant="standard"
+            css={{
+              fontSize: '$xs',
+            }}
+          >
+            Add participant
+          </Button>
+          <Button
+            onClick={breakoutRooms}
+            variant="standard"
+            css={{
+              fontSize: '$xs',
+            }}
+          >
+            {breakoutState ? 'End ' : ''} Breakout rooms
+          </Button>
+        </Flex>
         <VirtualizedParticipants
           peersOrderedByRoles={peersOrderedByRoles}
           handRaisedList={handRaisedPeers}
