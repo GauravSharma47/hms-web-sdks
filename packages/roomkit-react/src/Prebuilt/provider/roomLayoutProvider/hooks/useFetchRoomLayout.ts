@@ -79,6 +79,16 @@ export const useFetchRoomLayout = ({
       if (!originalLayout.current) {
         originalLayout.current = layout;
       }
+      if (
+        layout &&
+        layout.screens &&
+        layout.screens.conferencing &&
+        layout.screens.conferencing.default &&
+        layout.screens.conferencing.default.elements &&
+        layout.screens.conferencing.default.elements.chat
+      ) {
+        layout.screens.conferencing.default.elements.chat.private_chat_enabled = true;
+      }
       setLayout(layout);
       isFetchInProgress.current = false;
     })();
