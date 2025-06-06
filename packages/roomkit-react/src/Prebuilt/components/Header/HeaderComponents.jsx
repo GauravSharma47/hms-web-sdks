@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { selectDominantSpeaker, useHMSStore } from '@100mslive/react-sdk';
+import { selectDominantSpeaker, selectLocalPeer, useHMSStore } from '@100mslive/react-sdk';
 import { VolumeOneIcon } from '@100mslive/react-icons';
 import { Flex, styled, Text, textEllipsis } from '../../../';
 import { useRoomLayout } from '../../provider/roomLayoutProvider';
@@ -54,4 +54,21 @@ export const Logo = () => {
       }}
     />
   ) : null;
+};
+
+export const BreakoutTag = () => {
+  const localUser = useHMSStore(selectLocalPeer);
+
+  if (localUser.roleName === 'host' || localUser.roleName === 'admin') return null;
+  return (
+    <Flex
+      align="center"
+      justify="center"
+      css={{ flex: '1 1 0', color: '$on_surface_high', '@md': { display: 'none' } }}
+    >
+      <Text variant="sm" css={{ ...textEllipsis(200), ml: '$2' }} title={localUser.roleName.split('-').join(' ')}>
+        {localUser.roleName.split('-').join(' ')}
+      </Text>
+    </Flex>
+  );
 };
