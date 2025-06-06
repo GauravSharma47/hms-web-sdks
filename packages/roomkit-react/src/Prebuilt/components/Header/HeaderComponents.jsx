@@ -59,7 +59,7 @@ export const Logo = () => {
 export const BreakoutTag = () => {
   const localUser = useHMSStore(selectLocalPeer);
 
-  if (localUser.roleName === 'host' || localUser.roleName === 'admin') return null;
+  if (localUser.roleName === 'host' || localUser.roleName === 'guest') return null;
   return (
     <Flex
       align="center"
