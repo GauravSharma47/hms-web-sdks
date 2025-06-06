@@ -66,8 +66,12 @@ export const BreakoutTag = () => {
       justify="center"
       css={{ flex: '1 1 0', color: '$on_surface_high', '@md': { display: 'none' } }}
     >
-      <Text variant="sm" css={{ ...textEllipsis(200), ml: '$2' }} title={localUser.roleName.split('-').join(' ')}>
-        {localUser.roleName.split('-').join(' ')}
+      <Text
+        variant="sm"
+        css={{ ...textEllipsis(200), ml: '$2' }}
+        title={localUser.roleName.split('-').join(' ').replace('cohort', 'Room')}
+      >
+        {localUser.roleName.split('-').join(' ').replace('cohort', 'Room')}
       </Text>
     </Flex>
   );
