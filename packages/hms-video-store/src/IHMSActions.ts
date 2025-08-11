@@ -21,6 +21,7 @@ import {
   HMSVideoPlugin,
   HMSVideoTrackSettings,
   RTMPRecordingConfig,
+  StopHLSConfig,
   TokenRequest,
   TokenRequestOptions,
 } from './internal';
@@ -426,7 +427,7 @@ export interface IHMSActions<T extends HMSGenericTypes = { sessionStore: Record<
    * @param params HLSConfig - HLSConfig object with the required fields
    * @returns Promise<void> - resolves when the HLS streaming is stopped
    */
-  stopHLSStreaming(params?: HLSConfig): Promise<void>;
+  stopHLSStreaming(params?: StopHLSConfig): Promise<void>;
 
   /**
    * If you want to start transcriptions(Closed Caption).
@@ -688,4 +689,11 @@ export interface IHMSActions<T extends HMSGenericTypes = { sessionStore: Record<
    * Method to check if received bitrate is 0 for all remote peers or whether the room has whiteboard/quiz running. To be used by beam.
    */
   hasActiveElements(hmsStats: HMSStats): boolean;
+
+  /**
+   * An optional delay to add between earpiece and speakerphone selection
+   * Call this after preview or join is successful
+   * @param delay in ms
+   */
+  autoSelectAudioOutput(delay?: number): Promise<void>;
 }

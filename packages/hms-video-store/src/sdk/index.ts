@@ -44,7 +44,7 @@ import {
 } from '../interfaces';
 import { DeviceChangeListener } from '../interfaces/devices';
 import { IErrorListener } from '../interfaces/error-listener';
-import { HLSConfig, HLSTimedMetadata } from '../interfaces/hls-config';
+import { HLSConfig, HLSTimedMetadata, StopHLSConfig } from '../interfaces/hls-config';
 import { HMSInterface } from '../interfaces/hms';
 import { HMSLeaveRoomRequest } from '../interfaces/leave-room-request';
 import { HMSPeerListIteratorOptions } from '../interfaces/peer-list-iterator';
@@ -1042,6 +1042,10 @@ export class HMSSdk implements HMSInterface {
     HMSLogger.level = level;
   }
 
+  autoSelectAudioOutput(delay?: number) {
+    this.deviceManager?.autoSelectAudioOutput(delay);
+  }
+
   addAudioListener(audioListener: HMSAudioListener) {
     this.audioListener = audioListener;
     this.notificationManager?.setAudioListener(audioListener);
@@ -1166,7 +1170,7 @@ export class HMSSdk implements HMSInterface {
     await this.transport?.signal.startHLSStreaming(hlsParams);
   }
 
-  async stopHLSStreaming(params?: HLSConfig) {
+  async stopHLSStreaming(params?: StopHLSConfig) {
     if (!this.localPeer) {
       throw ErrorFactory.GenericErrors.NotConnected(
         HMSAction.VALIDATION,
@@ -1182,10 +1186,13 @@ export class HMSSdk implements HMSInterface {
           }
           return hlsVariant;
         }),
+        stop_reason: params.stop_reason,
       };
+
       await this.transport?.signal.stopHLSStreaming(hlsParams);
+    } else {
+      await this.transport?.signal.stopHLSStreaming();
     }
-    await this.transport?.signal.stopHLSStreaming();
   }
 
   async startTranscription(params: TranscriptionConfig) {
