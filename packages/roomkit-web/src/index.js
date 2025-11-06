@@ -9,6 +9,8 @@ const HMSPrebuiltWebComponent = r2wc(HMSPrebuilt, {
     role: 'string',
     options: 'json',
     onLeave: 'function',
+    onInvite: 'function',
+    onBreakout: 'function',
   },
 });
 
